@@ -109,6 +109,11 @@ if (!class_exists('OpenIDConnectLoginPlugin')):
             $oidc = new WP_OpenIDConnectClient($this->get_option('openid_server_url')
                 , $this->get_option('openid_client_id')
                 , $this->get_option('openid_client_secret'));
+            $oidc->providerConfigParam(array(
+              'authorization_endpoint' => $this->get_option('openid_server_url') . '/oauth/authorize',
+              'token_endpoint' => $this->get_option('openid_server_url') . '/oauth/token',
+              'userinfo_endpoint' => $this->get_option('openid_server_url') . '/oauth/userinfo',
+            ));
 
             // Setup a proxy if defined in wp-config.php
             if (defined('WP_PROXY_HOST')) {
@@ -151,7 +156,7 @@ if (!class_exists('OpenIDConnectLoginPlugin')):
                 * See sanitize_user() in wp-includes/formatting.php.
                 *
             */
-            $username = $oidc->requestUserInfo('preferred_username');
+            $username = $oidc->requestUserInfo('name');
 
             if ($username != substr(sanitize_user($username, TRUE), 0, 60)) {
                 $error = sprintf(__('<p><strong>ERROR</strong><br /><br />
@@ -168,9 +173,9 @@ if (!class_exists('OpenIDConnectLoginPlugin')):
                 die("Could not load user data");
             }
 
-            if ($oidc->requestUserInfo('email_verified') != true) {
-                throw new OpenIDConnectClientException("Your email address has not been verified with your provider.");
-            }
+            // if ($oidc->requestUserInfo('email_verified') != true) {
+            //     throw new OpenIDConnectClientException("Your email address has not been verified with your provider.");
+            // }
 
             $user = get_user_by('email', $oidc->requestUserInfo('email'));
             $wp_uid = null;

@@ -20,13 +20,13 @@ License:
 * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 * License for the specific language governing permissions and limitations
 * under the License.
-  
+
 */
 
 if (!class_exists('OpenIDConnectLoginPlugin')):
 
-    require('lib/helper/MY_Plugin.php');
-    require('lib/auth/OpenIDConnectClient.php5');
+    require(dirname( __FILE__ ) . '/lib/helper/MY_Plugin.php');
+    require(dirname( __FILE__ ) . '/lib/auth/OpenIDConnectClient.php');
 
     class WP_OpenIDConnectClient extends OpenIDConnectClient {
         /**

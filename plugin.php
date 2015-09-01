@@ -207,7 +207,7 @@ if (!class_exists('OpenIDConnectLoginPlugin')):
             do_action('wp_login', $username);
 
             // Redirect the user
-            wp_safe_redirect(admin_url());
+            wp_safe_redirect(site_url());
             exit();
 
         }

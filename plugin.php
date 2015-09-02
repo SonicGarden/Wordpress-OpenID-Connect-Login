@@ -156,7 +156,7 @@ if (!class_exists('OpenIDConnectLoginPlugin')):
                 * See sanitize_user() in wp-includes/formatting.php.
                 *
             */
-            $username = $oidc->requestUserInfo('name');
+            $username = $oidc->requestUserInfo('sub');
 
             if ($username != substr(sanitize_user($username, TRUE), 0, 60)) {
                 $error = sprintf(__('<p><strong>ERROR</strong><br /><br />

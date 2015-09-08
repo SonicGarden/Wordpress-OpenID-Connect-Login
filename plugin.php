@@ -183,6 +183,15 @@ if (!class_exists('OpenIDConnectLoginPlugin')):
             if ($user) {
                 // user already exists
                 $wp_uid = $user->ID;
+
+                wp_update_user(array(
+                    'ID' => $wp_uid,
+                    'user_email' => $oidc->requestUserInfo('email'),
+                    'first_name' => $oidc->requestUserInfo('given_name'),
+                    'last_name' => $oidc->requestUserInfo('family_name'),
+                    'nickname' => $oidc->requestUserInfo('name'),
+                    'display_name' => $oidc->requestUserInfo('name')
+                ));
             } else {
 
                 // First time logging in
@@ -196,10 +205,10 @@ if (!class_exists('OpenIDConnectLoginPlugin')):
                     'user_pass' => wp_generate_password(12, true),
                     'user_email' => $oidc->requestUserInfo('email'),
                     'first_name' => $oidc->requestUserInfo('given_name'),
-                    'last_name' => $oidc->requestUserInfo('family_name')
+                    'last_name' => $oidc->requestUserInfo('family_name'),
+                    'nickname' => $oidc->requestUserInfo('name'),
+                    'display_name' => $oidc->requestUserInfo('name')
                 ));
-
-
             }
 
             $user = wp_set_current_user($wp_uid, $username);

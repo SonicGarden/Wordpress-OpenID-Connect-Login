@@ -99,6 +99,11 @@ if (!class_exists('OpenIDConnectLoginPlugin')):
          */
         public function authenticate() {
 
+            // 認証前にどのページにいたかを記憶しておき、認証完了後にそこへ戻す
+            if (empty($_SESSION['openid_login_referer'])){
+                $_SESSION['openid_login_referer'] = $_SERVER["HTTP_REFERER"];
+            }
+            
             if (!$this->get_option('openid_client_id')
                 || !$this->get_option('openid_client_secret')
                 || !$this->get_option('openid_server_url')
@@ -216,7 +221,13 @@ if (!class_exists('OpenIDConnectLoginPlugin')):
             do_action('wp_login', $username);
 
             // Redirect the user
-            wp_safe_redirect(site_url());
+            // ログイン直前のページへ戻る
+            if (!empty($_SESSION['openid_login_referer'])) {
+                wp_safe_redirect($_SESSION['openid_login_referer']);
+                unset($_SESSION['openid_login_referer']);
+            } else {
+                wp_safe_redirect(site_url());
+            }
             exit();
 
         }
